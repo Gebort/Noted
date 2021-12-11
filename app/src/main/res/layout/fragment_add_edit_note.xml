@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.add_edit_note.AddEditNoteFragment">
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAddEdit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        android:contentDescription="Save note"
+        android:src="@drawable/save_icon"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <EditText
+        android:id="@+id/textTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="100dp"
+        android:ems="10"
+        android:hint="@string/title"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="74dp">
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <ImageButton
+            android:id="@+id/buttonBlue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:backgroundTint="#00FFFFFF"
+            android:contentDescription="Blue color"
+            android:scaleType="fitXY"
+            android:src="@drawable/circle_icon"
+            android:tint="@color/blue_200" />
+
+        <ImageButton
+            android:id="@+id/buttonGreen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:backgroundTint="#00FFFFFF"
+            android:contentDescription="Green color"
+            android:scaleType="fitXY"
+            android:src="@drawable/circle_icon"
+            android:tint="@color/green_200" />
+
+        <ImageButton
+            android:id="@+id/buttonOrange"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:backgroundTint="#00FFFFFF"
+            android:contentDescription="Orange button"
+            android:scaleType="fitXY"
+            android:src="@drawable/circle_icon"
+            android:tint="@color/orange_200" />
+
+        <ImageButton
+            android:id="@+id/buttonPurple"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:backgroundTint="#00FFFFFF"
+            android:contentDescription="Purple color"
+            android:scaleType="fitXY"
+            android:src="@drawable/circle_icon"
+            android:tint="@color/purple_200" />
+
+        <ImageButton
+            android:id="@+id/buttonRed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:backgroundTint="#00FFFFFF"
+            android:contentDescription="Red color"
+            android:scaleType="fitXY"
+            android:src="@drawable/circle_icon"
+            android:tint="@color/red_200" />
+
+        <ImageButton
+            android:id="@+id/buttonTeal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:backgroundTint="#00FFFFFF"
+            android:contentDescription="Teal color"
+            android:scaleType="fitXY"
+            android:src="@drawable/circle_icon"
+            android:tint="@color/teal_200" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/textContent"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        android:ems="10"
+        android:gravity="start|top"
+        android:hint="@string/content"
+        android:inputType="textMultiLine"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textTitle" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

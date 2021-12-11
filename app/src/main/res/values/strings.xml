@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Noted</string>
+    <string name="title">Title</string>
+    <string name="date">Date</string>
+    <string name="color">Color</string>
+    <string name="ascending">Ascending</string>
+    <string name="descending">Descending</string>
+    <string name="your_notes">Your notes</string>
+    <string name="note_edit">Note edit</string>
+    <string name="sort">Sort</string>
+    <string name="couldnt_save_note">Could not save note</string>
+    <string name="note_saved">Note saved</string>
+    <string name="note_deleted">Note \"%s\" deleted</string>
+    <string name="cancel">Cancel</string>
+    <string name="content">Description</string>
+
+
+</resources>
