@@ -15,9 +15,9 @@
             app:destination="@id/addEditNoteFragment"
             app:enterAnim="@android:anim/fade_in"
             app:exitAnim="@android:anim/fade_out"
-            app:launchSingleTop="false"
             app:popEnterAnim="@android:anim/fade_in"
             app:popExitAnim="@android:anim/fade_out"
+            app:launchSingleTop="false"
             app:popUpTo="@id/notesListFragment" />
     </fragment>
     <fragment
@@ -29,5 +29,47 @@
             android:name="id"
             app:argType="integer"
             android:defaultValue="-1" />
+    </fragment>
+    <fragment
+        android:id="@+id/favouriteNotesFragment2"
+        android:name="com.example.noted.ui.notes.FavouriteNotesFragment"
+        android:label="fragment_favourite_notes"
+        tools:layout="@layout/fragment_favourite_notes" >
+        <action
+            android:id="@+id/action_favouriteNotesFragment2_to_addEditNoteFragment"
+            app:destination="@id/addEditNoteFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out"
+            app:popUpTo="@id/favouriteNotesFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/notesDayFragment"
+        android:name="com.example.noted.ui.notes.NotesDayFragment"
+        android:label="fragment_notes_day"
+        tools:layout="@layout/fragment_notes_day" >
+        <action
+            android:id="@+id/action_notesDayFragment_to_addEditNoteFragment"
+            app:destination="@id/addEditNoteFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out"
+            app:popUpTo="@id/notesDayFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/notesWeekFragment"
+        android:name="com.example.noted.ui.notes.NotesWeekFragment"
+        android:label="fragment_notes_week"
+        tools:layout="@layout/fragment_notes_week" >
+        <action
+            android:id="@+id/action_notesWeekFragment_to_addEditNoteFragment"
+            app:destination="@id/addEditNoteFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out"
+            app:popUpTo="@id/notesWeekFragment" />
     </fragment>
 </navigation>

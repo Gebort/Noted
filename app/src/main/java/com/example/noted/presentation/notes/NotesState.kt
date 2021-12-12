@@ -6,6 +6,6 @@ import com.example.noted.domain.util.OrderType
 
 data class NotesState(
     val notes: List<Note> = emptyList(),
-    val noteOrder: NoteOrder = NoteOrder.Date(OrderType.Descending),
+    val noteOrder: NoteOrder = NoteOrder.Date(OrderType.Ascending),
     val isOrderSelectionVisible: Boolean = false
 )

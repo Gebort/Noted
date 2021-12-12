@@ -9,6 +9,8 @@ interface NoteRepository {
 
     fun getFavouriteNotes(): Flow<List<Note>>
 
+    fun getNotesAfterBefore(timeFrom: Long, timeBefore: Long): Flow<List<Note>>
+
     suspend fun getNoteById(id: Int): Note?
 
     suspend fun insertNote(note: Note)

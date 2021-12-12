@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/notesListFragment"
+        android:enabled="true"
+        android:icon="@drawable/all_icon"
+        android:title="@string/all"/>
+    <item
+        android:id="@+id/notesDayFragment"
+        android:enabled="true"
+        android:icon="@drawable/today_icon"
+        android:title="@string/today"/>
+    <item
+        android:id="@+id/notesWeekFragment"
+        android:enabled="true"
+        android:icon="@drawable/calendar_icon"
+        android:title="@string/week"/>
+    <item
+        android:id="@+id/favouriteNotesFragment2"
+        android:enabled="true"
+        android:icon="@drawable/star_icon"
+        android:title="@string/favourite"/>
+</menu>

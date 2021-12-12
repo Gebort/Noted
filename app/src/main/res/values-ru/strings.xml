@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">Noted</string>
+    <string name="title">Заголовок</string>
+    <string name="date">Дата</string>
+    <string name="time">Время</string>
+    <string name="color">Цвет</string>
+    <string name="ascending">По возрастанию</string>
+    <string name="descending">По убыванию</string>
+    <string name="your_notes">Все заметки</string>
+    <string name="note_edit">"Редактирование "</string>
+    <string name="sort">Сортировать</string>
+    <string name="couldnt_save_note">Не удалось сохранить заметку</string>
+    <string name="note_saved">Заметка сохранена</string>
+    <string name="note_deleted">Заметка \"%s\" удалена</string>
+    <string name="cancel">Отмена</string>
+    <string name="content">Описание</string>
+    <string name="pick_date">Выбрать дату</string>
+    <string name="pick_time">Выбрать время</string>
+    <string name="all">Все</string>
+    <string name="favourite">Важные</string>
+    <string name="today">Сегодня</string>
+    <string name="week">Неделя</string>
+    <string name="header">День</string>
+    <string name="monday">Понедельник</string>
+    <string name="tuesday">Вторник</string>
+    <string name="wednesday">Среда</string>
+    <string name="thursday">Четверг</string>
+    <string name="friday">Пятница</string>
+    <string name="saturday">Суббота</string>
+    <string name="sunday">Воскресенье</string>
+    <string name="error_day"> </string>
+
+</resources>

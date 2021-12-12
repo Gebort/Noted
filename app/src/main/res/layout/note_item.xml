@@ -13,7 +13,7 @@
         android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="5dp"
         app:cardBackgroundColor="@color/blue_200"
@@ -52,9 +52,8 @@
                 android:layout_marginStart="8dp"
                 android:text="Write android studio kurs"
                 android:textSize="14sp"
-                app:layout_constraintBottom_toBottomOf="@+id/starButton"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/starButton" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/descText"

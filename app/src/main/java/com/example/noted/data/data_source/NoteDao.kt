@@ -13,6 +13,9 @@ interface NoteDao {
     @Query("SELECT * FROM note WHERE favourite = 1")
     fun getFavouriteNotes(): Flow<List<Note>>
 
+    @Query("SELECT * FROM note WHERE timestamp < :timeBefore AND timestamp >= :timeFrom")
+    fun getNotesAfterBefore(timeFrom: Long, timeBefore: Long): Flow<List<Note>>
+
     @Query("SELECT * FROM note WHERE id = :id")
     suspend fun getNoteById(id: Int): Note?
 

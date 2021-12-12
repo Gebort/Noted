@@ -250,6 +250,7 @@ class AddEditNoteFragment : Fragment() {
 
                 picker.addOnPositiveButtonClickListener {
                     val timestamp = LocalTime.of(picker.hour, picker.minute).toSecondOfDay()*1000L
+                    val instant = Instant.ofEpochMilli(timestamp)
                     model.onEvent(AddEditNoteEvent.ChangedTimestamp(timestamp))
                 }
 

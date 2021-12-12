@@ -12,49 +12,51 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.noted.R
+import com.example.noted.databinding.FragmentFavouriteNotesBinding
 import com.example.noted.databinding.FragmentNotesListBinding
 import com.example.noted.domain.model.Note
 import com.example.noted.domain.util.NoteOrder
 import com.example.noted.domain.util.OrderType
+import com.example.noted.presentation.notes.FavouriteNotesViewModel
 import com.example.noted.presentation.notes.NotesEvent
 import com.example.noted.presentation.notes.NotesUiEvent
 import com.example.noted.presentation.notes.NotesViewModel
 import com.google.android.material.snackbar.Snackbar
 
 
-class NotesListFragment : Fragment() {
+class FavouriteNotesFragment : Fragment() {
 
-    private var _binding: FragmentNotesListBinding? = null
+    private var _binding: FragmentFavouriteNotesBinding? = null
     private val binding get() = _binding!!
 
-    private val model: NotesViewModel by activityViewModels()
+    private val model: FavouriteNotesViewModel by activityViewModels()
     private var adapter: NotesListAdapter? = null
 
     private val slidingDuration = 200L
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
         setHasOptionsMenu(true)
-        _binding = FragmentNotesListBinding.inflate(inflater, container, false)
+        _binding = FragmentFavouriteNotesBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        activity?.title = resources.getString(R.string.your_notes)
+        activity?.title = resources.getString(R.string.favourite)
 
 
-        binding.notesRecyclerView.layoutManager = LinearLayoutManager(activity?.applicationContext)
+        binding.favNotesRecyclerView.layoutManager = LinearLayoutManager(activity?.applicationContext)
 
         val notes = model.state.value?.notes ?: listOf()
 
         adapter = NotesListAdapter(
-                notes,
-                binding.notesRecyclerView,
-                { note -> deleteNote(note) },
-                { id -> changeNote(id)},
-                { note -> labelFavourite(note)}
+            notes,
+            binding.favNotesRecyclerView,
+            { note -> deleteNote(note) },
+            { id -> changeNote(id)},
+            { note -> labelFavourite(note)}
         )
-        binding.notesRecyclerView.adapter = adapter
+        binding.favNotesRecyclerView.adapter = adapter
 
         model.state.value?.isOrderSelectionVisible?.let { visible ->
             if (visible){
@@ -65,11 +67,11 @@ class NotesListFragment : Fragment() {
             }
         }
 
-       binding.sortView.radioAscending.setOnClickListener {
-           model.state.value?.noteOrder?.let {
-               model.onEvent(NotesEvent.Order(it.copy(OrderType.Ascending)))
-           }
-       }
+        binding.sortView.radioAscending.setOnClickListener {
+            model.state.value?.noteOrder?.let {
+                model.onEvent(NotesEvent.Order(it.copy(OrderType.Ascending)))
+            }
+        }
 
         binding.sortView.radioDescending.setOnClickListener {
             model.state.value?.noteOrder?.let {
@@ -93,11 +95,6 @@ class NotesListFragment : Fragment() {
             model.state.value?.noteOrder?.let {
                 model.onEvent(NotesEvent.Order(NoteOrder.Title(it.orderType)))
             }
-        }
-
-        binding.fabAddNote.setOnClickListener {
-            val action = NotesListFragmentDirections.actionNotesListFragmentToAddEditNoteFragment()
-            findNavController().navigate(action)
         }
 
         activity?.let {
@@ -145,11 +142,11 @@ class NotesListFragment : Fragment() {
                     when (uiEvent) {
                         is NotesUiEvent.NoteDeleted -> {
                             model.handledEvent(uiEvent)
-                            binding.notesRecyclerView.let { it1 -> Snackbar.make(it1, String.format(resources.getString(R.string.note_deleted), uiEvent.title), Snackbar.LENGTH_LONG)
-                                    .setAction(R.string.cancel){
-                                        model.restoreNote()
-                                    }
-                                    .show() }
+                            binding.favNotesRecyclerView.let { it1 -> Snackbar.make(it1, String.format(resources.getString(R.string.note_deleted), uiEvent.title), Snackbar.LENGTH_LONG)
+                                .setAction(R.string.cancel){
+                                    model.restoreNote()
+                                }
+                                .show() }
                         }
                     }
                 }
@@ -184,7 +181,7 @@ class NotesListFragment : Fragment() {
     }
 
     private fun changeNote(id: Int){
-        val action = NotesListFragmentDirections.actionNotesListFragmentToAddEditNoteFragment()
+        val action = FavouriteNotesFragmentDirections.actionFavouriteNotesFragment2ToAddEditNoteFragment()
         action.id = id
         findNavController().navigate(action)
     }
@@ -196,10 +193,10 @@ class NotesListFragment : Fragment() {
     private fun slideSortingDown(){
         binding.sortView.layoutOrder.visibility = View.VISIBLE
         val animate = TranslateAnimation(
-                0F,
-                0F,
-                -binding.sortView.layoutOrder.height.toFloat(),
-                0F)
+            0F,
+            0F,
+            -binding.sortView.layoutOrder.height.toFloat(),
+            0F)
 
         animate.duration = slidingDuration
         animate.fillAfter = true
@@ -209,10 +206,10 @@ class NotesListFragment : Fragment() {
     private fun slideSortingUp(){
         binding.sortView.layoutOrder.visibility = View.INVISIBLE
         val animate = TranslateAnimation(
-                0F,
-                0F,
-                0F,
-                -binding.sortView.layoutOrder.height.toFloat())
+            0F,
+            0F,
+            0F,
+            -binding.sortView.layoutOrder.height.toFloat())
 
         animate.duration = slidingDuration
         animate.fillAfter = true

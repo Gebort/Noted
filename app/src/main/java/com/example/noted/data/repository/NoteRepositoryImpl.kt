@@ -18,6 +18,10 @@ class NoteRepositoryImpl: NoteRepository {
         return dao.getFavouriteNotes()
     }
 
+    override fun getNotesAfterBefore(timeFrom: Long, timeBefore: Long): Flow<List<Note>> {
+        return dao.getNotesAfterBefore(timeFrom, timeBefore)
+    }
+
     override suspend fun getNoteById(id: Int): Note? {
         return dao.getNoteById(id)
     }

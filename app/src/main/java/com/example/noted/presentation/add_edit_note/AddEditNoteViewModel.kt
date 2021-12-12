@@ -63,9 +63,9 @@ class AddEditNoteViewModel: ViewModel() {
                         _progress.value = note.progress
                         _favourite.value = note.favourite
                         val instant = Instant.ofEpochMilli(note.timestamp)
-                        var dateSnap = ZonedDateTime.ofInstant(instant, ZoneId.systemDefault())
+                        val dateSnap = ZonedDateTime.ofInstant(instant, ZoneId.systemDefault())
                         _datestamp.value = LocalDate.of(dateSnap.year, dateSnap.month, dateSnap.dayOfMonth).toEpochDay()*24*60*60*1000
-                        _timestamp.value = instant.toEpochMilli() - datestamp.value!!
+                        _timestamp.value = dateSnap.hour*60*60*1000 + dateSnap.minute*60*1000L
                     }
                 }
             }
@@ -116,10 +116,10 @@ class AddEditNoteViewModel: ViewModel() {
                 _progress.value = event.value
             }
             is AddEditNoteEvent.SaveNote -> {
+                val timeStampLocal = timestamp.value!! + datestamp.value!!
+                val dateSnapUTC = timeStampLocal - TimeZone.getDefault().rawOffset - TimeZone.getDefault().dstSavings
                 viewModelScope.launch {
                     try {
-                        val timeStampLocal = timestamp.value!! + datestamp.value!!
-                        val dateSnapUTC = timeStampLocal - TimeZone.getDefault().rawOffset - TimeZone.getDefault().dstSavings
                         noteUseCases.insertNote(
                             Note(
                                     id = if (currentNoteId != -1) currentNoteId else null,

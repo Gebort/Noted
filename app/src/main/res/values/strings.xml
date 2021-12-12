@@ -16,6 +16,18 @@
     <string name="content">Description</string>
     <string name="pick_date">Pick a date</string>
     <string name="pick_time">Pick a time</string>
-
+    <string name="all">All</string>
+    <string name="favourite">Important</string>
+    <string name="today">Today</string>
+    <string name="week">Week</string>
+    <string name="header">Day</string>
+    <string name="monday">Monday</string>
+    <string name="tuesday">Tuesday</string>
+    <string name="wednesday">Wednesday</string>
+    <string name="thursday">Thursday</string>
+    <string name="friday">Friday</string>
+    <string name="saturday">Saturday</string>
+    <string name="sunday">Sunday</string>
+    <string name="error_day"> </string>
 
 </resources>
