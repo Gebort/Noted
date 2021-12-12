@@ -8,6 +8,9 @@ import com.example.noted.domain.model.Note
 import com.example.noted.domain.use_case.NoteUseCases
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.time.*
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 class AddEditNoteViewModel: ViewModel() {
 
@@ -22,8 +25,20 @@ class AddEditNoteViewModel: ViewModel() {
     private val _noteColor = MutableLiveData<Int>()
     val noteColor get() = _noteColor
 
+    private val _favourite = MutableLiveData<Boolean>()
+    val favourite get() = _favourite
+
+    private val _progress = MutableLiveData<Float>()
+    val progress get() = _progress
+
     private val _uiEvent = MutableLiveData<AddEditNoteUiEvent>()
     val uiEvent get() = _uiEvent
+
+    private val _timestamp = MutableLiveData<Long>()
+    val timestamp get() = _timestamp
+
+    private val _datestamp = MutableLiveData<Long>()
+    val datestamp get() = _datestamp
 
     private var currentNoteId: Int? = null
 
@@ -45,6 +60,12 @@ class AddEditNoteViewModel: ViewModel() {
                         _noteTitle.value = note.title
                         _noteContent.value = note.content
                         _noteColor.value = note.color
+                        _progress.value = note.progress
+                        _favourite.value = note.favourite
+                        val instant = Instant.ofEpochMilli(note.timestamp)
+                        var dateSnap = ZonedDateTime.ofInstant(instant, ZoneId.systemDefault())
+                        _datestamp.value = LocalDate.of(dateSnap.year, dateSnap.month, dateSnap.dayOfMonth).toEpochDay()*24*60*60*1000
+                        _timestamp.value = instant.toEpochMilli() - datestamp.value!!
                     }
                 }
             }
@@ -62,6 +83,12 @@ class AddEditNoteViewModel: ViewModel() {
         _noteContent.value = ""
         _noteColor.value = Note.noteColors.random()
         _uiEvent.value = null
+        _favourite.value = false
+        _progress.value = 0f
+        val instant = Instant.ofEpochMilli(System.currentTimeMillis())
+        var dateSnap = ZonedDateTime.ofInstant(instant, ZoneId.systemDefault())
+        _datestamp.value = LocalDate.of(dateSnap.year, dateSnap.month, dateSnap.dayOfMonth).toEpochDay()*24*60*60*1000
+        _timestamp.value = dateSnap.hour * 60 * 60 * 1000 + dateSnap.minute * 60 * 1000L
         currentNoteId = null
     }
 
@@ -76,20 +103,35 @@ class AddEditNoteViewModel: ViewModel() {
             is AddEditNoteEvent.ChangedColor -> {
                 _noteColor.value = event.color
             }
+            is AddEditNoteEvent.ChangedTimestamp -> {
+                _timestamp.value = event.value
+            }
+            is AddEditNoteEvent.ChangedDatestamp -> {
+                _datestamp.value = event.value
+            }
+            is AddEditNoteEvent.ToggleFavourite -> {
+                _favourite.value = favourite.value != true
+            }
+            is AddEditNoteEvent.EnteredProgress -> {
+                _progress.value = event.value
+            }
             is AddEditNoteEvent.SaveNote -> {
                 viewModelScope.launch {
                     try {
+                        val timeStampLocal = timestamp.value!! + datestamp.value!!
+                        val dateSnapUTC = timeStampLocal - TimeZone.getDefault().rawOffset - TimeZone.getDefault().dstSavings
                         noteUseCases.insertNote(
                             Note(
-                                id = if (currentNoteId != -1) currentNoteId else null,
-                                title = noteTitle.value!!,
-                                content = noteContent.value!!,
-                                timestamp = System.currentTimeMillis(),
-                                color = noteColor.value!!
+                                    id = if (currentNoteId != -1) currentNoteId else null,
+                                    title = noteTitle.value!!,
+                                    content = noteContent.value!!,
+                                    timestamp = dateSnapUTC,
+                                    color = noteColor.value!!,
+                                    favourite = favourite.value!!,
+                                    progress = progress.value!!
                             )
                         )
                         _uiEvent.value = AddEditNoteUiEvent.SavedNote()
-                        emptyData()
                     } catch (e: InvalidNoteException) {
                         _uiEvent.value = AddEditNoteUiEvent.FailedToSave()
                     }

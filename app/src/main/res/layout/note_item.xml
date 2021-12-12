@@ -32,6 +32,18 @@
             android:paddingRight="5dp"
             android:paddingBottom="0dp">
 
+            <com.google.android.material.slider.Slider
+                android:id="@+id/progressSlider"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:valueFrom="0"
+                android:valueTo="100.0"
+                app:layout_constraintBottom_toBottomOf="@+id/deleteButton"
+                app:layout_constraintEnd_toStartOf="@+id/deleteButton"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/deleteButton" />
+
             <TextView
                 android:id="@+id/titleText"
                 style="@style/TextAppearance.AppCompat.Headline"
@@ -40,8 +52,9 @@
                 android:layout_marginStart="8dp"
                 android:text="Write android studio kurs"
                 android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="@+id/starButton"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="@+id/starButton" />
 
             <TextView
                 android:id="@+id/descText"
@@ -65,9 +78,59 @@
                 android:backgroundTint="#00FFFFFF"
                 android:contentDescription="Delete note"
                 android:scaleType="fitXY"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/descText"
+                app:layout_constraintEnd_toEndOf="@+id/starButton"
+                app:layout_constraintStart_toStartOf="@+id/starButton"
+                app:layout_constraintTop_toBottomOf="@+id/timeText"
                 app:srcCompat="@drawable/delete_ion" />
+
+            <ImageButton
+                android:id="@+id/starButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#00FFFFFF"
+                android:scaleType="fitXY"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/star_border_icon" />
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:layout_constraintStart_toStartOf="@+id/descText"
+                app:layout_constraintTop_toBottomOf="@+id/descText"
+                app:srcCompat="@drawable/calendar_icon" />
+
+            <TextView
+                android:id="@+id/dateText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="12.12.2021"
+                app:layout_constraintBottom_toBottomOf="@+id/imageView"
+                app:layout_constraintStart_toEndOf="@+id/imageView"
+                app:layout_constraintTop_toTopOf="@+id/imageView" />
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintStart_toEndOf="@+id/dateText"
+                app:layout_constraintTop_toBottomOf="@+id/descText"
+                app:srcCompat="@drawable/time_icon" />
+
+            <TextView
+                android:id="@+id/timeText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="12:44"
+                app:layout_constraintBottom_toBottomOf="@+id/imageView2"
+                app:layout_constraintStart_toEndOf="@+id/imageView2"
+                app:layout_constraintTop_toTopOf="@+id/imageView2" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -140,4 +140,81 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textTitle" />
 
+    <ImageButton
+        android:id="@+id/starButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:backgroundTint="#00FFFFFF"
+        android:scaleType="fitXY"
+        android:src="@drawable/star_border_icon"
+        app:layout_constraintBottom_toBottomOf="@+id/textTitle"
+        app:layout_constraintStart_toEndOf="@+id/textTitle"
+        app:layout_constraintTop_toTopOf="@+id/textTitle" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/datePickerLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="32dp"
+        android:hint="@string/date"
+        app:boxStrokeColor="#FFFFFF"
+        app:errorEnabled="false"
+        app:helperTextTextColor="#FFFFFF"
+        app:hintTextColor="#FFFFFF"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textContent"
+        app:placeholderTextColor="#FFFFFF"
+        app:prefixTextColor="#FFFFFF"
+        app:startIconDrawable="@drawable/calendar_icon"
+        app:suffixTextColor="#FFFEFE">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/datePickerInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/timePickerLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:hint="@string/time"
+        app:boxStrokeColor="#FFFFFF"
+        app:errorEnabled="false"
+        app:hintTextColor="#FFFFFF"
+        app:layout_constraintStart_toEndOf="@+id/datePickerLayout"
+        app:layout_constraintTop_toBottomOf="@+id/textContent"
+        app:startIconDrawable="@drawable/time_icon">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/timePickerInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.slider.Slider
+        android:id="@+id/progressSlider"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:enabled="true"
+        android:valueFrom="0"
+        android:valueTo="100"
+        app:layout_constraintEnd_toEndOf="@+id/textContent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/textContent"
+        app:layout_constraintTop_toBottomOf="@+id/datePickerLayout"
+        app:thumbColor="#FFFFFF"
+        app:tickColorInactive="#FFFFFF"
+        app:trackColorActive="#FFFFFF"
+        app:trackColorInactive="#FFFFFF" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

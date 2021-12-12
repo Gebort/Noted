@@ -1,6 +1,5 @@
 package com.example.noted.presentation.notes
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,7 +7,6 @@ import com.example.noted.domain.model.InvalidNoteException
 import com.example.noted.domain.model.Note
 import com.example.noted.domain.use_case.NoteUseCases
 import com.example.noted.domain.util.NoteOrder
-import com.example.noted.presentation.add_edit_note.AddEditNoteUiEvent
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -87,6 +85,15 @@ class NotesViewModel(
                         isOrderSelectionVisible = !it.isOrderSelectionVisible
                     )
                 }
+            }
+            is NotesEvent.ToggleFavourite -> {
+                    viewModelScope.launch {
+                        noteUseCases.insertNote(
+                                event.note.copy(
+                                        favourite = !event.note.favourite
+                                )
+                        )
+                    }
             }
         }
     }

@@ -51,7 +51,8 @@ class NotesListFragment : Fragment() {
                 notes,
                 binding.notesRecyclerView,
                 { note -> deleteNote(note) },
-                { id -> changeNote(id)}
+                { id -> changeNote(id)},
+                { note -> labelFavourite(note)}
         )
         binding.notesRecyclerView.adapter = adapter
 
@@ -135,8 +136,7 @@ class NotesListFragment : Fragment() {
                 }
 
                 adapter?.let { adapter ->
-                    adapter.notes = state.notes
-                    adapter.notifyDataSetChanged()
+                    adapter.submitList(state.notes)
                 }
             }
 
@@ -186,6 +186,10 @@ class NotesListFragment : Fragment() {
         val action = NotesListFragmentDirections.actionNotesListFragmentToAddEditNoteFragment()
         action.id = id
         findNavController().navigate(action)
+    }
+
+    private fun labelFavourite(note: Note){
+        model.onEvent(NotesEvent.ToggleFavourite(note))
     }
 
     private fun slideSortingDown(){

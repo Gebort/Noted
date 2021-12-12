@@ -6,6 +6,7 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.text.format.DateFormat.is24HourFormat
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
@@ -22,7 +23,17 @@ import com.example.noted.databinding.FragmentAddEditNoteBinding
 import com.example.noted.presentation.add_edit_note.AddEditNoteEvent
 import com.example.noted.presentation.add_edit_note.AddEditNoteViewModel
 import com.example.noted.presentation.add_edit_note.AddEditNoteUiEvent
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.DateValidatorPointForward
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
+import java.text.DecimalFormat
+import java.text.SimpleDateFormat
+import java.time.*
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 
 class AddEditNoteFragment : Fragment() {
@@ -36,7 +47,6 @@ class AddEditNoteFragment : Fragment() {
 
     private var colorTransitionTime = 250L
 
-    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         activity?.title = resources.getString(R.string.note_edit)
@@ -46,6 +56,10 @@ class AddEditNoteFragment : Fragment() {
 
         val args: AddEditNoteFragmentArgs by navArgs()
         model.setCurrentNoteId(args.id)
+
+        binding.progressSlider.setLabelFormatter { value ->
+            DecimalFormat("##%").format(value/100)
+        }
 
         binding.buttonBlue.setOnClickListener{
             model.onEvent(AddEditNoteEvent.ChangedColor(R.color.blue_200))
@@ -69,6 +83,28 @@ class AddEditNoteFragment : Fragment() {
 
         binding.buttonTeal.setOnClickListener{
             model.onEvent(AddEditNoteEvent.ChangedColor(R.color.teal_200))
+        }
+
+        binding.starButton.setOnClickListener{
+            model.onEvent(AddEditNoteEvent.ToggleFavourite)
+        }
+
+        binding.progressSlider.addOnChangeListener { _, value, _ ->
+            model.onEvent(AddEditNoteEvent.EnteredProgress(value))
+        }
+
+        activity?.let {
+            model.progress.observe(it, { value ->
+                if (value != binding.progressSlider.value){
+                    binding.progressSlider.value = value
+                }
+            })
+        }
+
+        activity?.let{
+            model.favourite.observe(it, { favourite ->
+                binding.starButton.setImageResource(if (favourite) R.drawable.star_icon else R.drawable.star_border_icon)
+            })
         }
 
         activity?.let {
@@ -159,6 +195,70 @@ class AddEditNoteFragment : Fragment() {
             model.onEvent(AddEditNoteEvent.SaveNote)
         }
 
+        activity?.let{
+            model.timestamp.observe(it, { timestamp ->
+                val instant = Instant.ofEpochMilli(timestamp)
+                val timeStr = DateTimeFormatter.ofPattern("HH.mm").format(ZonedDateTime.ofInstant(instant, ZoneOffset.UTC))
+                if (timeStr != binding.timePickerInput.text.toString()) {
+                    binding.timePickerInput.setText(timeStr)
+                }
+            })
+        }
+
+        activity?.let{
+            model.datestamp.observe(it, { datestamp ->
+                val instant = Instant.ofEpochMilli(datestamp)
+                val dateStr = DateTimeFormatter.ofPattern("dd.MM.yyyy").format(ZonedDateTime.ofInstant(instant, ZoneId.systemDefault()))
+                if (dateStr != binding.datePickerInput.text.toString()) {
+                    binding.datePickerInput.setText(dateStr)
+                }
+            })
+        }
+
+        binding.datePickerInput.setOnFocusChangeListener { _, b ->
+            if (b) {
+                val constraintsBuilder =
+                        CalendarConstraints.Builder()
+                                .setValidator(DateValidatorPointForward.now())
+                val picker =
+                        MaterialDatePicker.Builder.datePicker()
+                                .setTitleText(R.string.pick_date)
+                                .setSelection(model.datestamp.value)
+                                .setCalendarConstraints(constraintsBuilder.build())
+                                .build()
+
+                picker.addOnPositiveButtonClickListener { date: Long ->
+                    model.onEvent(AddEditNoteEvent.ChangedDatestamp(date))
+                }
+
+                fragmentManager?.let { it1 -> picker.show(it1, "datePicker") }
+                binding.datePickerInput.isActivated = false
+                binding.datePickerInput.clearFocus()
+            }
+        }
+
+         binding.timePickerInput.setOnFocusChangeListener { _, b ->
+            if (b) {
+                val isSystem24Hour = is24HourFormat(activity?.applicationContext)
+                val clockFormat = if (isSystem24Hour) TimeFormat.CLOCK_24H else TimeFormat.CLOCK_12H
+
+                val picker =
+                        MaterialTimePicker.Builder()
+                                .setTimeFormat(clockFormat)
+                                .setTitleText(R.string.pick_time)
+                                .build()
+
+                picker.addOnPositiveButtonClickListener {
+                    val timestamp = LocalTime.of(picker.hour, picker.minute).toSecondOfDay()*1000L
+                    model.onEvent(AddEditNoteEvent.ChangedTimestamp(timestamp))
+                }
+
+                fragmentManager?.let { it1 -> picker.show(it1, "timePicker") }
+                binding.timePickerInput.isActivated = false
+                binding.timePickerInput.clearFocus()
+            }
+        }
+
 
         return view
     }
@@ -180,6 +280,10 @@ class AddEditNoteFragment : Fragment() {
             model.noteTitle.removeObservers(it)
             model.noteContent.removeObservers(it)
             model.uiEvent.removeObservers(it)
+            model.progress.removeObservers(it)
+            model.favourite.removeObservers(it)
+            model.timestamp.removeObservers(it)
+            model.datestamp.removeObservers(it)
         }
         super.onDestroyView()
     }

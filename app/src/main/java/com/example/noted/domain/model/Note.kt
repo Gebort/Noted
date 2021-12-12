@@ -11,6 +11,8 @@ data class Note(
         val content: String,
         val timestamp: Long,
         val color: Int,
+        val favourite: Boolean,
+        val progress: Float
 ) {
     companion object {
         val noteColors = listOf(
