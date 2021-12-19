@@ -64,10 +64,8 @@ class NotesListAdapter(
                         cardView?.setCardBackgroundColor(ContextCompat.getColor(recyclerView.context, item.color))
                         content?.text = item.content
                         progressSlider?.value = item.progress
-                        val instant = Instant.ofEpochMilli(item.timestamp)
-                        var dateSnap = ZonedDateTime.ofInstant(instant, ZoneId.systemDefault())
-                        timeText?.text  = DateTimeFormatter.ofPattern("HH.mm").format(dateSnap)
-                        dateText?.text  = DateTimeFormatter.ofPattern("dd.MM.yyyy").format(dateSnap)
+                        timeText?.text  = item.date.timeStr
+                        dateText?.text  = item.date.dateStr
 
                         starButton?.setImageResource(if (item.favourite) R.drawable.star_icon else R.drawable.star_border_icon)
 

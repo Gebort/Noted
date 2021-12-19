@@ -9,6 +9,10 @@ import android.view.animation.TranslateAnimation
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.noted.R
@@ -20,6 +24,8 @@ import com.example.noted.presentation.notes.NotesEvent
 import com.example.noted.presentation.notes.NotesUiEvent
 import com.example.noted.presentation.notes.NotesViewModel
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 
 class NotesListFragment : Fragment() {
@@ -100,61 +106,70 @@ class NotesListFragment : Fragment() {
             findNavController().navigate(action)
         }
 
-        activity?.let {
-            model.state.observe(it) { state ->
-                if (state.isOrderSelectionVisible != binding.sortView.layoutOrder.isVisible) {
-                    if (state.isOrderSelectionVisible){
-                        slideSortingDown()
-                    }
-                    else{
-                        slideSortingUp()
-                    }
-                }
-
-                when (state.noteOrder){
-                    is NoteOrder.Title -> {
-                        binding.sortView.radioTitle.isChecked = true
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                model.state.collect { state ->
+                    if (state.isOrderSelectionVisible != binding.sortView.layoutOrder.isVisible) {
+                        if (state.isOrderSelectionVisible){
+                            slideSortingDown()
+                        }
+                        else{
+                            slideSortingUp()
+                        }
                     }
 
-                    is NoteOrder.Date -> {
-                        binding.sortView.radioDate.isChecked = true
+                    when (state.noteOrder){
+                        is NoteOrder.Title -> {
+                            binding.sortView.radioTitle.isChecked = true
+                        }
+
+                        is NoteOrder.Date -> {
+                            binding.sortView.radioDate.isChecked = true
+                        }
+
+                        is NoteOrder.Color -> {
+                            binding.sortView.radioColor.isChecked = true
+                        }
                     }
 
-                    is NoteOrder.Color -> {
-                        binding.sortView.radioColor.isChecked = true
-                    }
-                }
+                    when (state.noteOrder.orderType){
+                        is OrderType.Descending -> {
+                            binding.sortView.radioDescending.isChecked = true
+                        }
 
-                when (state.noteOrder.orderType){
-                    is OrderType.Descending -> {
-                        binding.sortView.radioDescending.isChecked = true
+                        is OrderType.Ascending -> {
+                            binding.sortView.radioAscending.isChecked = true
+                        }
                     }
 
-                    is OrderType.Ascending -> {
-                        binding.sortView.radioAscending.isChecked = true
-                    }
-                }
-
-                adapter?.let { adapter ->
-                    adapter.submitList(state.notes)
+                    adapter?.submitList(state.notes)
                 }
             }
+        }
 
-            model.uiEvent.observe(it, { uiEvent ->
-                if (uiEvent != null && !uiEvent.handled) {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                model.uiEvent.collect { uiEvent ->
                     when (uiEvent) {
                         is NotesUiEvent.NoteDeleted -> {
-                            model.handledEvent(uiEvent)
-                            binding.notesRecyclerView.let { it1 -> Snackbar.make(it1, String.format(resources.getString(R.string.note_deleted), uiEvent.title), Snackbar.LENGTH_LONG)
-                                    .setAction(R.string.cancel){
+                            binding.notesRecyclerView.let { it1 ->
+                                Snackbar.make(
+                                    it1,
+                                    String.format(
+                                        resources.getString(R.string.note_deleted),
+                                        uiEvent.title
+                                    ),
+                                    Snackbar.LENGTH_LONG
+                                )
+                                    .setAction(R.string.cancel) {
                                         model.restoreNote()
                                     }
-                                    .show() }
+                                    .show()
+                            }
                         }
                     }
                 }
-            })
-
+            }
         }
 
         return view
@@ -172,10 +187,6 @@ class NotesListFragment : Fragment() {
 
     override fun onDestroyView() {
         _binding = null
-        activity?.let {
-            model.state.removeObservers(it)
-            model.uiEvent.removeObservers(it)
-        }
         super.onDestroyView()
     }
 

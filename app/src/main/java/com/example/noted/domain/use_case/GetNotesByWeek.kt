@@ -22,8 +22,8 @@ class GetNotesByWeek(
         val startUTC = startDate - TimeZone.getDefault().rawOffset - TimeZone.getDefault().dstSavings
         val endUTC = endDate - TimeZone.getDefault().rawOffset - TimeZone.getDefault().dstSavings
 
-        return repository.getNotesAfterBefore(startUTC, endUTC).map { notes ->
-            notes.sortedBy { it.timestamp }
+        return repository.getNotesAfterBefore(startUTC, endUTC).map { notesDto ->
+            notesDto.map{ it.toNote() }.sortedBy{ it.date.datestamp }
         }
     }
 }

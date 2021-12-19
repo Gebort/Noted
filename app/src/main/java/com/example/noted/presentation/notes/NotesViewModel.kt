@@ -8,36 +8,26 @@ import com.example.noted.domain.model.Note
 import com.example.noted.domain.use_case.NoteUseCases
 import com.example.noted.domain.util.NoteOrder
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class NotesViewModel(
 ) : ViewModel() {
 
     private val noteUseCases = NoteUseCases()
-    private var _state = MutableLiveData<NotesState>()
-    val state get() = _state
+
+    private var _state = MutableStateFlow(NotesState())
+    val state get() = _state.asStateFlow()
+
+    private var _uiEvent = MutableSharedFlow<NotesUiEvent>()
+    val uiEvent get() = _uiEvent.asSharedFlow()
 
     private var lastDeletedNote: Note? = null
 
     private var getNotesJob: Job? = null
 
-    private var _uiEvent = MutableLiveData<NotesUiEvent>()
-    val uiEvent get() = _uiEvent
-
     init {
-        _state.value = NotesState()
-        _uiEvent.value = null
-        state.value?.let {
-            getNotes(it.noteOrder)
-        }
-    }
-
-    fun handledEvent(uiEvent: NotesUiEvent){
-        if (this.uiEvent.value == uiEvent){
-            _uiEvent.value?.handled = true
-        }
+        getNotes(state.value.noteOrder)
     }
 
     fun restoreNote(){
@@ -58,7 +48,7 @@ class NotesViewModel(
     fun onEvent(event: NotesEvent){
         when (event){
             is NotesEvent.Order -> {
-                state.value?.let {
+                state.value.let {
                     if (it.noteOrder::class == event.noteOrder::class &&
                             it.noteOrder.orderType == event.noteOrder.orderType){
                         return
@@ -70,7 +60,7 @@ class NotesViewModel(
                 viewModelScope.launch {
                     noteUseCases.deleteNote(event.note)
                     lastDeletedNote = event.note
-                    _uiEvent.value = NotesUiEvent.NoteDeleted(event.note.title)
+                    _uiEvent.emit(NotesUiEvent.NoteDeleted(event.note.title))
                 }
             }
             is NotesEvent.RestoreNote -> {
@@ -80,7 +70,7 @@ class NotesViewModel(
                 }
             }
             is NotesEvent.ToggleOrderSelection -> {
-                state.value?.let {
+                state.value.let {
                     _state.value = it.copy(
                         isOrderSelectionVisible = !it.isOrderSelectionVisible
                     )
@@ -102,7 +92,7 @@ class NotesViewModel(
         getNotesJob?.cancel()
         getNotesJob = noteUseCases.getNotes(noteOrder)
             .onEach { notes ->
-            state.value?.let {
+            state.value.let {
                 _state.value = it.copy(
                     notes = notes,
                     noteOrder = noteOrder

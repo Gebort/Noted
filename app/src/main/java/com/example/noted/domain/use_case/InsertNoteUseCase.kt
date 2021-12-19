@@ -16,6 +16,6 @@ class InsertNoteUseCase(
         if (note.content.isBlank()){
             throw InvalidNoteException("Empty content")
         }
-        repository.insertNote(note)
+        repository.insertNote(note.toDto())
     }
 }

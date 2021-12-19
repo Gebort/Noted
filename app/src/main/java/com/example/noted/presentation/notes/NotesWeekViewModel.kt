@@ -8,35 +8,27 @@ import com.example.noted.domain.model.Note
 import com.example.noted.domain.use_case.NoteUseCases
 import com.example.noted.domain.util.NoteOrder
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class NotesWeekViewModel(
 ) : ViewModel() {
 
     private val noteUseCases = NoteUseCases()
-    private var _state = MutableLiveData<NotesState>()
-    val state get() = _state
+
+    private var _state = MutableStateFlow(NotesState())
+    val state get() = _state.asStateFlow()
+
+    private var _uiEvent = MutableSharedFlow<NotesUiEvent>()
+    val uiEvent get() = _uiEvent.asSharedFlow()
 
     private var lastDeletedNote: Note? = null
 
     private var getNotesJob: Job? = null
 
-    private var _uiEvent = MutableLiveData<NotesUiEvent>()
-    val uiEvent get() = _uiEvent
-
     init {
-        _state.value = NotesState()
-        _uiEvent.value = null
-        state.value?.let {
+        state.value.let {
             getNotes(it.noteOrder)
-        }
-    }
-
-    fun handledEvent(uiEvent: NotesUiEvent){
-        if (this.uiEvent.value == uiEvent){
-            _uiEvent.value?.handled = true
         }
     }
 
@@ -61,7 +53,7 @@ class NotesWeekViewModel(
                 viewModelScope.launch {
                     noteUseCases.deleteNote(event.note)
                     lastDeletedNote = event.note
-                    _uiEvent.value = NotesUiEvent.NoteDeleted(event.note.title)
+                    _uiEvent.emit(NotesUiEvent.NoteDeleted(event.note.title))
                 }
             }
             is NotesEvent.RestoreNote -> {
@@ -86,7 +78,7 @@ class NotesWeekViewModel(
         getNotesJob?.cancel()
         getNotesJob = noteUseCases.getNotesByWeek()
             .onEach { notes ->
-                state.value?.let {
+                state.value.let {
                     _state.value = it.copy(
                         notes = notes,
                         noteOrder = noteOrder

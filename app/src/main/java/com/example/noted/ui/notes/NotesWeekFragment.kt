@@ -4,6 +4,9 @@ import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.noted.R
@@ -11,6 +14,8 @@ import com.example.noted.databinding.FragmentNotesWeekBinding
 import com.example.noted.domain.model.Note
 import com.example.noted.presentation.notes.*
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 
 class NotesWeekFragment : Fragment() {
@@ -35,23 +40,26 @@ class NotesWeekFragment : Fragment() {
         adapter = NotesListTimedAdapter(
             binding.weekRecyclerView,
             { note -> deleteNote(note) },
-            { id -> changeNote(id)},
-            { note -> labelFavourite(note)}
+            { id -> changeNote(id) },
+            { note -> labelFavourite(note) }
         )
         binding.weekRecyclerView.adapter = adapter
 
-        activity?.let {
-            model.state.observe(it) { state ->
-                adapter?.let { adapter ->
-                    adapter.addHeaderAndSumbitList(state.notes)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                model.state.collect { state ->
+                    adapter?.let { adapter ->
+                        adapter.addHeaderAndSumbitList(state.notes)
+                    }
                 }
             }
+        }
 
-            model.uiEvent.observe(it, { uiEvent ->
-                if (uiEvent != null && !uiEvent.handled) {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                model.uiEvent.collect { uiEvent ->
                     when (uiEvent) {
                         is NotesUiEvent.NoteDeleted -> {
-                            model.handledEvent(uiEvent)
                             binding.weekRecyclerView.let { it1 -> Snackbar.make(it1, String.format(resources.getString(R.string.note_deleted), uiEvent.title), Snackbar.LENGTH_LONG)
                                 .setAction(R.string.cancel){
                                     model.restoreNote()
@@ -60,12 +68,11 @@ class NotesWeekFragment : Fragment() {
                         }
                     }
                 }
-            })
-
+            }
         }
 
-        return view
-    }
+            return view
+        }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         menu.findItem(R.id.action_sort).isVisible = false
@@ -79,10 +86,6 @@ class NotesWeekFragment : Fragment() {
 
     override fun onDestroyView() {
         _binding = null
-        activity?.let {
-            model.state.removeObservers(it)
-            model.uiEvent.removeObservers(it)
-        }
         super.onDestroyView()
     }
 

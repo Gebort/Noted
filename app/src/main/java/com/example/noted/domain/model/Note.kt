@@ -1,19 +1,29 @@
 package com.example.noted.domain.model
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
 import com.example.noted.R
+import com.example.noted.domain.util.Date
 
-@Entity
 data class Note(
-        @PrimaryKey(autoGenerate = true) val id: Int? = null,
+        val id: Int? = null,
         val title: String,
         val content: String,
-        val timestamp: Long,
+        val date: Date,
         val color: Int,
         val favourite: Boolean,
         val progress: Float
 ) {
+    fun toDto(): NoteDto{
+        return NoteDto(
+                id = id,
+                title = title,
+                content = content,
+                timestamp = date.dateUTC,
+                color = color,
+                favourite = favourite,
+                progress = progress
+        )
+    }
+
     companion object {
         val noteColors = listOf(
                 R.color.purple_200,
