@@ -7,14 +7,17 @@ import com.example.noted.domain.model.InvalidNoteException
 import com.example.noted.domain.model.Note
 import com.example.noted.domain.use_case.NoteUseCases
 import com.example.noted.domain.util.Date
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.time.*
 import java.util.*
+import javax.inject.Inject
 
-class AddEditNoteViewModel: ViewModel() {
-
-    private val noteUseCases = NoteUseCases()
+@HiltViewModel
+class AddEditNoteViewModel @Inject constructor(
+    private val noteUseCases: NoteUseCases
+) : ViewModel() {
 
     private val _noteTitle = MutableLiveData<String>()
     val noteTitle get() = _noteTitle

@@ -5,14 +5,16 @@ import androidx.lifecycle.viewModelScope
 import com.example.noted.domain.model.Note
 import com.example.noted.domain.use_case.NoteUseCases
 import com.example.noted.domain.util.NoteOrder
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class FavouriteNotesViewModel(
+@HiltViewModel
+class FavouriteNotesViewModel @Inject constructor (
+    private val noteUseCases: NoteUseCases
 ) : ViewModel() {
-
-    private val noteUseCases = NoteUseCases()
 
     private var _state = MutableStateFlow(NotesState())
     val state get() = _state.asStateFlow()

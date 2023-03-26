@@ -11,6 +11,7 @@
         android:name=".data.common.App"
         android:theme="@style/Theme.Noted">
         <activity android:name=".ui.MainActivity"
+            android:exported="true"
             android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

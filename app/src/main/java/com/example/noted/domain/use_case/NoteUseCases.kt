@@ -1,14 +1,15 @@
 package com.example.noted.domain.use_case
 
-import com.example.noted.data.repository.NoteRepositoryImpl
+import com.example.noted.domain.repository.NoteRepository
 
-data class NoteUseCases(
-    val getNotes: GetNotesUseCase = GetNotesUseCase(NoteRepositoryImpl()),
-    val getFavouriteNotes: GetFavouriteNotesUseCase = GetFavouriteNotesUseCase(NoteRepositoryImpl()),
-    val getNotesByDay: GetNotesByDay = GetNotesByDay(NoteRepositoryImpl()),
-    val getNotesByWeek: GetNotesByWeek = GetNotesByWeek(NoteRepositoryImpl()),
-    val deleteNote: DeleteNoteUseCase = DeleteNoteUseCase(NoteRepositoryImpl()),
-    val insertNote: InsertNoteUseCase = InsertNoteUseCase(NoteRepositoryImpl()),
-    val getNote: GetNoteUseCase = GetNoteUseCase(NoteRepositoryImpl())
-
-)
+class NoteUseCases(
+    repository: NoteRepository
+) {
+    val getNotes: GetNotesUseCase = GetNotesUseCase(repository)
+    val getFavouriteNotes: GetFavouriteNotesUseCase = GetFavouriteNotesUseCase(repository)
+    val getNotesByDay: GetNotesByDay = GetNotesByDay(repository)
+    val getNotesByWeek: GetNotesByWeek = GetNotesByWeek(repository)
+    val deleteNote: DeleteNoteUseCase = DeleteNoteUseCase(repository)
+    val insertNote: InsertNoteUseCase = InsertNoteUseCase(repository)
+    val getNote: GetNoteUseCase = GetNoteUseCase(repository)
+}

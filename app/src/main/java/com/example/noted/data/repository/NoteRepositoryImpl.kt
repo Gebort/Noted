@@ -1,15 +1,13 @@
 package com.example.noted.data.repository
 
-import com.example.noted.data.common.App
-import com.example.noted.data.data_source.NoteDao
-import com.example.noted.domain.model.Note
+import com.example.noted.data.data_source.NoteDatabase
 import com.example.noted.domain.model.NoteDto
 import com.example.noted.domain.repository.NoteRepository
 import kotlinx.coroutines.flow.Flow
 
-class NoteRepositoryImpl: NoteRepository {
+class NoteRepositoryImpl(db: NoteDatabase): NoteRepository {
 
-    private val dao = App.instance?.getDatabase()?.noteDao!!
+    private val dao = db.noteDao
 
     override fun getNotes(): Flow<List<NoteDto>> {
         return dao.getNotes()
